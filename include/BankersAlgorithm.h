@@ -31,6 +31,14 @@ private:
      */
     bool canAllocate(int roadIndex) const;
 
+    /**
+     * @brief Checks if a road can be allocated resources using work vector
+     * @param roadIndex Index of the road to check
+     * @param work Current work vector (available + released resources)
+     * @return true if resources can be allocated, false otherwise
+     */
+    bool canAllocate(int roadIndex, const std::vector<int>& work) const;
+
 public:
     /**
      * @brief Constructs a Banker's Algorithm instance
@@ -61,7 +69,7 @@ public:
      * @brief Runs the Banker's Algorithm to find a safe sequence
      * @return Vector containing safe sequence of road indices, empty if unsafe
      */
-    std::vector<int> findSafeSequence();
+    std::vector<int> findSafeSequence() const;
 
     /**
      * @brief Checks if the current state is safe

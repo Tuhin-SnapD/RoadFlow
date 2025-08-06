@@ -34,16 +34,22 @@ void BankersAlgorithm::calculateNeed() {
     }
 }
 
-bool BankersAlgorithm::canAllocate(int roadIndex) const {
+/**
+ * @brief Checks if a road can be allocated resources using work vector
+ * @param roadIndex Index of the road to check
+ * @param work Current work vector (available + released resources)
+ * @return true if resources can be allocated, false otherwise
+ */
+bool BankersAlgorithm::canAllocate(int roadIndex, const std::vector<int>& work) const {
     for (int j = 0; j < numResources; ++j) {
-        if (need[roadIndex][j] > available[j]) {
+        if (need[roadIndex][j] > work[j]) {
             return false;
         }
     }
     return true;
 }
 
-std::vector<int> BankersAlgorithm::findSafeSequence() {
+std::vector<int> BankersAlgorithm::findSafeSequence() const {
     std::vector<int> safeSequence;
     std::vector<int> work = available;
     std::vector<bool> finish = finished;
@@ -53,7 +59,7 @@ std::vector<int> BankersAlgorithm::findSafeSequence() {
         bool found = false;
         
         for (int i = 0; i < numRoads; ++i) {
-            if (!finish[i] && canAllocate(i)) {
+            if (!finish[i] && canAllocate(i, work)) {
                 // Allocate resources
                 for (int j = 0; j < numResources; ++j) {
                     work[j] += allocation[i][j];

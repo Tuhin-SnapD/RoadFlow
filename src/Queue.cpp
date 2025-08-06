@@ -1,7 +1,7 @@
 #include "Queue.h"
 #include <iostream>
 
-Queue::Queue(size_t size) : capacity(size), front(0), rear(-1) {
+Queue::Queue(size_t size) : front(0), capacity(size), rear(0), empty_flag(true) {
     data.resize(capacity);
 }
 
@@ -10,7 +10,11 @@ void Queue::enqueue(int value) {
         throw std::overflow_error("Queue is full");
     }
     
-    rear = (rear + 1) % capacity;
+    if (empty_flag) {
+        empty_flag = false;
+    } else {
+        rear = (rear + 1) % capacity;
+    }
     data[rear] = value;
 }
 
@@ -23,7 +27,8 @@ int Queue::dequeue() {
     if (front == rear) {
         // Queue becomes empty
         front = 0;
-        rear = -1;
+        rear = 0;
+        empty_flag = true;
     } else {
         front = (front + 1) % capacity;
     }
@@ -49,7 +54,8 @@ int Queue::removeAt(size_t position) {
     if (front == rear) {
         // Queue becomes empty
         front = 0;
-        rear = -1;
+        rear = 0;
+        empty_flag = true;
     } else {
         rear = (rear - 1 + capacity) % capacity;
     }
@@ -58,7 +64,7 @@ int Queue::removeAt(size_t position) {
 }
 
 bool Queue::isEmpty() const {
-    return rear == -1;
+    return empty_flag;
 }
 
 bool Queue::isFull() const {

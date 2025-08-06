@@ -2,46 +2,30 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <limits> // Add missing include for std::numeric_limits
 
 void RoadScheduler::addRoad(const Road& road) {
     roads.push_back(road);
 }
 
 void RoadScheduler::calculatePriorities() {
-    totalSum = 0;
-    
-    // Calculate sum of all factors
-    for (const auto& road : roads) {
-        int prioritySum = road.distance + road.utility + road.traffic;
-        totalSum += prioritySum;
-    }
-    
-    // Calculate priorities as percentages
+    // Calculate priorities based on utility (higher utility = higher priority)
+    // Also consider traffic and distance as secondary factors
     for (auto& road : roads) {
-        int prioritySum = road.distance + road.utility + road.traffic;
-        road.priority = (prioritySum * 100) / totalSum;
-    }
-    
-    // Handle ties by considering utility, traffic, and distance
-    for (size_t i = 0; i < roads.size(); ++i) {
-        for (size_t j = i + 1; j < roads.size(); ++j) {
-            if (roads[i].priority == roads[j].priority) {
-                if (roads[i].utility > roads[j].utility) {
-                    ++roads[i].priority;
-                } else if (roads[j].utility > roads[i].utility) {
-                    ++roads[j].priority;
-                } else if (roads[i].traffic > roads[j].traffic) {
-                    ++roads[i].priority;
-                } else if (roads[j].traffic > roads[i].traffic) {
-                    ++roads[j].priority;
-                } else if (roads[i].distance > roads[j].distance) {
-                    ++roads[i].priority;
-                } else if (roads[j].distance > roads[i].distance) {
-                    ++roads[j].priority;
-                } else {
-                    ++roads[i].priority;
-                }
-            }
+        // Primary factor: utility (higher is better)
+        // Secondary factors: traffic (higher is better), distance (lower is better)
+        // Use long long to prevent overflow
+        long long priority = static_cast<long long>(road.utility) * 100 + 
+                           static_cast<long long>(road.traffic) * 10 - 
+                           static_cast<long long>(road.distance);
+        
+        // Clamp to int range to prevent overflow
+        if (priority > std::numeric_limits<int>::max()) {
+            road.priority = std::numeric_limits<int>::max();
+        } else if (priority < std::numeric_limits<int>::min()) {
+            road.priority = std::numeric_limits<int>::min();
+        } else {
+            road.priority = static_cast<int>(priority);
         }
     }
 }
@@ -61,20 +45,38 @@ int RoadScheduler::findMaxPriority() const {
 }
 
 void RoadScheduler::calculateTimes() {
+    // Store original priorities before modifying them
+    std::vector<int> originalPriorities;
+    for (const auto& road : roads) {
+        originalPriorities.push_back(road.priority);
+    }
+    
     std::vector<Road> tempRoads = roads;
     int currentTime = 0;
     
-    for (size_t i = 0; i < roads.size(); ++i) {
-        int maxIndex = findMaxPriority();
-        if (maxIndex != -1) {
-            tempRoads[maxIndex].waitingTime = currentTime;
-            currentTime += tempRoads[maxIndex].estimatedTime;
-            tempRoads[maxIndex].completionTime = currentTime;
-            tempRoads[maxIndex].priority = -1; // Mark as processed
-        }
+    // Use a more efficient approach: sort by priority once, then process in order
+    std::vector<std::pair<int, size_t>> priorityIndices;
+    for (size_t i = 0; i < tempRoads.size(); ++i) {
+        priorityIndices.push_back({tempRoads[i].priority, i});
+    }
+    
+    // Sort by priority (descending order)
+    std::sort(priorityIndices.begin(), priorityIndices.end(), 
+              std::greater<std::pair<int, size_t>>());
+    
+    // Process roads in priority order
+    for (const auto& [priority, index] : priorityIndices) {
+        tempRoads[index].waitingTime = currentTime;
+        currentTime += tempRoads[index].estimatedTime;
+        tempRoads[index].completionTime = currentTime;
     }
     
     roads = tempRoads;
+    
+    // Restore original priorities for getOptimalSequence
+    for (size_t i = 0; i < roads.size(); ++i) {
+        roads[i].priority = originalPriorities[i];
+    }
 }
 
 void RoadScheduler::schedule() {

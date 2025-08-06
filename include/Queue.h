@@ -13,8 +13,9 @@ class Queue {
 private:
     std::vector<int> data;
     size_t front;
-    size_t rear;
     size_t capacity;
+    size_t rear;
+    bool empty_flag;
 
 public:
     /**

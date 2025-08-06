@@ -1,6 +1,10 @@
 #include "Graph.h"
 #include <iostream>
 #include <algorithm>
+#include <stdexcept>
+
+// Define the static constant
+const int Graph::INF;
 
 Graph::Graph(int vertices) : numVertices(vertices) {
     adjacencyMatrix.resize(vertices, std::vector<int>(vertices, INF));
@@ -12,18 +16,20 @@ Graph::Graph(int vertices) : numVertices(vertices) {
 }
 
 void Graph::addEdge(int from, int to, int weight) {
-    if (from >= 0 && from < numVertices && to >= 0 && to < numVertices) {
-        // For undirected graph, add edge in both directions
-        if (adjacencyMatrix[from][to] == INF || adjacencyMatrix[from][to] > weight) {
-            adjacencyMatrix[from][to] = weight;
-            adjacencyMatrix[to][from] = weight;
-        }
+    if (from < 0 || from >= numVertices || to < 0 || to >= numVertices) {
+        throw std::out_of_range("Invalid vertex index");
+    }
+    
+    // For undirected graph, add edge in both directions
+    if (adjacencyMatrix[from][to] == INF || adjacencyMatrix[from][to] > weight) {
+        adjacencyMatrix[from][to] = weight;
+        adjacencyMatrix[to][from] = weight;
     }
 }
 
 std::pair<int, std::vector<int>> Graph::findShortestPath(int source, int destination) {
     if (source < 0 || source >= numVertices || destination < 0 || destination >= numVertices) {
-        return {INF, {}};
+        throw std::out_of_range("Invalid vertex index");
     }
 
     std::vector<int> distance(numVertices, INF);
