@@ -135,7 +135,9 @@ std::string Logger::getTimestamp() const {
         now.time_since_epoch()) % 1000;
     
     std::stringstream ss;
-    ss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S");
+    std::tm tm{};
+    localtime_s(&tm, &time_t);
+    ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
     ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
     return ss.str();
 }

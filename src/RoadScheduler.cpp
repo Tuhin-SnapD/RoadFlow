@@ -37,7 +37,7 @@ int RoadScheduler::findMaxPriority() const {
     for (size_t i = 0; i < roads.size(); ++i) {
         if (roads[i].priority > maxPriority) {
             maxPriority = roads[i].priority;
-            maxIndex = i;
+            maxIndex = static_cast<int>(i);
         }
     }
     

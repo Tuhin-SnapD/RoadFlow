@@ -184,7 +184,9 @@ std::string Config::trim(const std::string& str) const {
 
 std::string Config::toLower(const std::string& str) const {
     std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) -> char {
+        return static_cast<char>(std::tolower(c));
+    });
     return result;
 }
 
