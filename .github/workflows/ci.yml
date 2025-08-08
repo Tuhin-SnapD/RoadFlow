@@ -45,28 +45,22 @@ jobs:
         brew install googletest
 
     - name: Configure CMake
+      shell: bash
       run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
     - name: Build project
+      shell: bash
       run: |
-        cd build
-        cmake --build . --config Release
+        cmake --build build --config Release -- -j 2
 
     - name: Run tests
+      shell: bash
       run: |
-        cd build
-        if [ -f "bin/RoadConstructionTests" ]; then
-          ./bin/RoadConstructionTests
-        elif [ -f "bin/RoadConstructionTests.exe" ]; then
-          ./bin/RoadConstructionTests.exe
-        else
-          echo "Test executable not found, skipping tests"
-        fi
+        ctest --test-dir build -C Release --output-on-failure
 
     - name: Run benchmarks
+      shell: bash
       run: |
         cd build
         if [ -f "bin/RoadConstructionTests" ]; then
@@ -90,8 +84,10 @@ jobs:
         sudo apt-get install -y build-essential cmake cppcheck libgtest-dev
 
     - name: Static analysis
+      shell: bash
       run: |
-        cppcheck --enable=all --std=c++17 --language=c++ src/ include/ --error-exitcode=1
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        cppcheck --project=build/compile_commands.json --enable=all --std=c++17 --inline-suppr --suppress=missingIncludeSystem --error-exitcode=1
 
     - name: Check formatting
       run: |
