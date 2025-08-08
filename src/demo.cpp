@@ -333,7 +333,7 @@ void demonstrateErrorHandling() {
     std::cout << "Error handling demonstration completed." << std::endl;
 }
 
-int demo_main() {
+int main() {
     std::cout << "Road Construction Scheduling System - Professional Features Demo" << std::endl;
     std::cout << "=================================================================" << std::endl;
     

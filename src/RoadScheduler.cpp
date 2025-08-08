@@ -110,9 +110,9 @@ void RoadScheduler::displayResults() const {
     std::cout << "Average Waiting Time: " << getAverageWaitingTime() << " days\n";
     
     if (checkDeadlines()) {
-        std::cout << "\n✓ All deadlines can be met with the current schedule.\n";
+        std::cout << "\n[OK] All deadlines can be met with the current schedule.\n";
     } else {
-        std::cout << "\n⚠ Some deadlines may be compromised.\n";
+        std::cout << "\n[WARNING] Some deadlines may be compromised.\n";
     }
     
     std::cout << "\nOptimal Construction Sequence: ";
@@ -120,7 +120,7 @@ void RoadScheduler::displayResults() const {
     for (size_t i = 0; i < sequence.size(); ++i) {
         std::cout << "Road" << sequence[i];
         if (i < sequence.size() - 1) {
-            std::cout << " → ";
+            std::cout << " -> ";
         }
     }
     std::cout << "\n" << std::string(80, '=') << "\n";
@@ -176,5 +176,4 @@ double RoadScheduler::getAverageWaitingTime() const {
 
 void RoadScheduler::clear() {
     roads.clear();
-    totalSum = 0;
 } 

@@ -413,16 +413,16 @@ void runBankersAlgorithm() {
     std::cout << std::string(60, '=') << "\n";
     
     if (!safeSequence.empty()) {
-        std::cout << "✓ SAFE SEQUENCE EXISTS:\n";
+        std::cout << "[OK] SAFE SEQUENCE EXISTS:\n";
         for (size_t i = 0; i < safeSequence.size(); ++i) {
             std::cout << "R" << safeSequence[i];
             if (i < safeSequence.size() - 1) {
-                std::cout << " → ";
+                std::cout << " -> ";
             }
         }
         std::cout << "\n";
     } else {
-        std::cout << "✗ NO SAFE SEQUENCE EXISTS\n";
+        std::cout << "[ERROR] NO SAFE SEQUENCE EXISTS\n";
         std::cout << "System is in an unsafe state!\n";
     }
     std::cout << std::string(60, '=') << "\n";
@@ -509,16 +509,16 @@ void runBankersDemo() {
     std::cout << std::string(60, '=') << "\n";
     
     if (!safeSequence.empty()) {
-        std::cout << "✓ SAFE SEQUENCE EXISTS:\n";
+        std::cout << "[OK] SAFE SEQUENCE EXISTS:\n";
         for (size_t i = 0; i < safeSequence.size(); ++i) {
             std::cout << "R" << safeSequence[i];
             if (i < safeSequence.size() - 1) {
-                std::cout << " → ";
+                std::cout << " -> ";
             }
         }
         std::cout << "\n";
     } else {
-        std::cout << "✗ NO SAFE SEQUENCE EXISTS\n";
+        std::cout << "[ERROR] NO SAFE SEQUENCE EXISTS\n";
         std::cout << "System is in an unsafe state!\n";
     }
     std::cout << std::string(60, '=') << "\n";
@@ -584,16 +584,16 @@ int main() {
                     std::cout << std::string(60, '=') << "\n";
                     
                     if (!safeSequence.empty()) {
-                        std::cout << "✓ SAFE SEQUENCE EXISTS:\n";
+                        std::cout << "[OK] SAFE SEQUENCE EXISTS:\n";
                         for (size_t i = 0; i < safeSequence.size(); ++i) {
                             std::cout << "R" << safeSequence[i];
                             if (i < safeSequence.size() - 1) {
-                                std::cout << " → ";
+                                std::cout << " -> ";
                             }
                         }
                         std::cout << "\n";
                     } else {
-                        std::cout << "✗ NO SAFE SEQUENCE EXISTS\n";
+                        std::cout << "[ERROR] NO SAFE SEQUENCE EXISTS\n";
                         std::cout << "System is in an unsafe state!\n";
                     }
                     std::cout << std::string(60, '=') << "\n";

@@ -28,7 +28,6 @@ struct Road {
 class RoadScheduler {
 private:
     std::vector<Road> roads;
-    int totalSum;
 
     /**
      * @brief Calculates priorities for all roads based on multiple factors

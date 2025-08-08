@@ -76,7 +76,6 @@ RoadConstruction/
 ├── .github/workflows/     # CI/CD pipeline configuration
 ├── build.bat             # Windows build script with auto-compiler detection
 ├── README.md             # Project documentation (this file)
-├── test_plan.md          # Comprehensive test plan
 ├── LICENSE               # MIT License
 ├── .gitignore           # Git ignore patterns
 ├── include/              # Header files
@@ -103,30 +102,26 @@ RoadConstruction/
 │   ├── test_scheduler.cpp # Scheduler tests
 │   ├── test_bankers.cpp # Banker's algorithm tests
 │   └── test_new_features.cpp # New features tests
-└── bin/                 # Compiled executables (created after build)
+├── bin/                 # Compiled executables (created after build)
+├── obj/                 # Object files (created during build)
+├── *.txt                # Sample input files for testing
+└── *.log                # Log files (created during demo runs)
 ```
 
 ## 🛠️ Building the Project
 
 ### Prerequisites
-- **Windows OS** (primary support)
-- **C++ Compiler**: Any of the following (auto-detected by build script):
-  - MinGW-w64 (g++)
-  - Microsoft Visual Studio Build Tools (cl)
-  - GCC (gcc)
+- **C++ Compiler**: Any of the following:
+  - **Windows**: MinGW-w64 (g++), Microsoft Visual Studio Build Tools (cl), or GCC
+  - **Linux/macOS**: GCC or Clang
+- **Build System**: Choose from the options below
 
-### Quick Start (Windows)
+### Build Options
 
-1. **Clone or download the project**
-   ```cmd
-   git clone <repository-url>
-   cd RoadConstruction
-   ```
-
-2. **Run the build script**
-   ```cmd
-   build.bat
-   ```
+#### Option 1: Windows Build Script (Recommended for Windows)
+```cmd
+build.bat
+```
 
 The build script will:
 - Auto-detect available C++ compilers
@@ -136,11 +131,129 @@ The build script will:
 - Run unit tests (if Google Test is available)
 - Provide helpful error messages if compilation fails
 
+#### Option 2: CMake (Cross-platform)
+```bash
+# Create build directory
+mkdir build
+cd build
+
+# Configure and build
+cmake ..
+cmake --build .
+
+# Run tests (if available)
+ctest --output-on-failure
+```
+
+#### Option 3: Makefile (Linux/macOS)
+```bash
+# Build main and demo executables
+make all
+
+# Build and run tests (requires Google Test)
+make test
+
+# Clean build artifacts
+make clean
+
+# Show available targets
+make help
+```
+
 ### Build Output
 After successful build, you'll find:
-- `bin\RoadConstruction.exe` - Main application
-- `bin\RoadConstructionDemo.exe` - Demo program
-- `bin\RoadConstructionTests.exe` - Test suite (if Google Test available)
+- `bin/RoadConstruction` (or `.exe` on Windows) - Main application
+- `bin/RoadConstructionDemo` (or `.exe` on Windows) - Demo program
+- `bin/RoadConstructionTests` (or `.exe` on Windows) - Test suite (if Google Test available)
+
+### Installing Dependencies
+
+#### Google Test (for running tests)
+- **Ubuntu/Debian**: `sudo apt-get install libgtest-dev`
+- **macOS**: `brew install googletest`
+- **Windows**: Install via vcpkg or download from GitHub
+
+## 📄 Input Files
+
+The project includes sample input files for testing both algorithms:
+
+### Priority Scheduling Files
+- `priority_scheduling_sample.txt` - Simple 2-road example
+- `priority_scheduling_complex.txt` - Complex 3-road example
+
+### Banker's Algorithm Files
+- `bankers_sample.txt` - Simple 3-road, 2-resource example
+- `bankers_complex.txt` - Complex 5-road, 3-resource example
+
+### Input File Formats
+
+#### Priority Scheduling Format
+```
+<number_of_roads>
+<for each road:>
+  <number_of_cities> <number_of_routes>
+  <for each route:>
+    <city1> <city2> <distance>
+  <start_city> <end_city>
+  <utility> <traffic_impact> <construction_time> <deadline>
+```
+
+**Example (priority_scheduling_sample.txt)**:
+```
+2
+2 1
+0 1 10
+0 1
+5 2 10 15
+2 1
+0 1 20
+0 1
+3 1 8 20
+```
+
+**Explanation**: 2 roads total
+- Road 1: 2 cities, 1 route (0→1, distance 10), start=0, end=1, utility=5, traffic=2, time=10, deadline=15
+- Road 2: 2 cities, 1 route (0→1, distance 20), start=0, end=1, utility=3, traffic=1, time=8, deadline=20
+
+#### Banker's Algorithm Format
+```
+<number_of_roads> <number_of_resource_types>
+<allocation_matrix (one row per line)>
+<maximum_matrix (one row per line)>
+<available_resources (space-separated)>
+```
+
+**Example (bankers_sample.txt)**:
+```
+3 2
+0 1
+2 0
+1 0
+7 5
+3 2
+9 0
+1 1
+3 3
+```
+
+**Explanation**: 3 roads, 2 resource types
+- Allocation matrix: Road 0: [0,1], Road 1: [2,0], Road 2: [1,0]
+- Maximum matrix: Road 0: [7,5], Road 1: [3,2], Road 2: [9,0]
+- Available resources: [1,1]
+
+### File Validation
+The system validates:
+- All numbers are non-negative
+- City indices are within valid range
+- Resource allocations don't exceed maximum needs
+- File format matches expected structure
+
+### Tips
+- Use the sample files as templates
+- Ensure all numbers are space-separated
+- Check that city indices start from 0
+- Verify that resource allocations ≤ maximum needs
+- Make sure deadlines are reasonable (≥ construction time)
 
 ## 🎮 Usage Guide
 
@@ -159,6 +272,20 @@ bin\RoadConstruction.exe
 5. **Quick demo (Priority Scheduling)** - See algorithm in action
 6. **Quick demo (Banker's Algorithm)** - See resource allocation demo
 7. **Exit** - Close the application
+
+### Using Input Files
+
+#### Priority Scheduling Example
+```cmd
+# Choose option 3, then enter:
+priority_scheduling_complex.txt
+```
+
+#### Banker's Algorithm Example
+```cmd
+# Choose option 4, then enter:
+bankers_complex.txt
+```
 
 ### Priority Scheduling Example
 
@@ -223,7 +350,52 @@ bin\RoadConstructionTests.exe
 - **Integration Tests**: End-to-end functionality
 
 ### Manual Testing
-Follow the test plan in `test_plan.md` for comprehensive manual testing scenarios.
+
+#### Test Case 1: Priority Scheduling Algorithm
+**Input**:
+- Number of roads: 2
+- Road 1: 2 cities, 2 routes (0→1:10km, 1→0:15km), start=0, end=1, utility=5, traffic=2, time=10, deadline=15
+- Road 2: 2 cities, 2 routes (0→1:20km, 1→0:25km), start=0, end=1, utility=3, traffic=1, time=8, deadline=20
+
+**Expected Output**:
+- Road 1: Shortest distance = 10 km
+- Road 2: Shortest distance = 20 km
+- Scheduling should prioritize based on utility, traffic impact, and deadlines
+
+#### Test Case 2: Banker's Algorithm
+**Input**:
+- Number of roads: 3, Resources: 3
+- Allocation Matrix: R0:[0,1,0], R1:[2,0,0], R2:[3,0,2]
+- Maximum Matrix: R0:[7,5,3], R1:[3,2,2], R2:[9,0,2]
+- Available Resources: [3,3,2]
+
+**Expected Output**:
+- Should find a safe sequence or determine if system is in unsafe state
+
+#### Manual Test Instructions:
+1. Run the application: `bin\RoadConstruction.exe`
+2. Choose option 1 for Priority Scheduling
+3. Enter the test data as specified above
+4. Verify the output matches expectations
+5. Return to main menu and test Banker's Algorithm
+6. Enter the test data for Banker's Algorithm
+7. Verify the results
+
+## 🐛 Recent Bug Fixes
+
+### Version 1.1.0 (Latest)
+- **Fixed**: Missing main function in demo.cpp causing linking errors
+- **Fixed**: Missing method implementation in BankersAlgorithm class
+- **Fixed**: Unused variable cleanup in RoadScheduler
+- **Fixed**: Static constant definition conflicts in Graph class
+- **Fixed**: Character encoding issues in console output (Unicode symbols)
+- **Added**: Sample input files for both algorithms
+- **Added**: Comprehensive input file documentation
+- **Improved**: Error handling and input validation
+
+### Known Issues
+- `test_new_features.cpp` is currently disabled due to Logger singleton pattern mismatch
+- Some advanced features require Google Test framework for full functionality
 
 ## 📊 Performance Analysis
 
@@ -364,7 +536,8 @@ If you encounter any issues or have questions:
 1. Check the test plan for common scenarios
 2. Review the code comments for implementation details
 3. Run the demo programs to see expected behavior
-4. Open an issue on the repository
+4. Check the input file documentation for format requirements
+5. Open an issue on the repository
 
 ---
 

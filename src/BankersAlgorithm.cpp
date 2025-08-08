@@ -35,6 +35,15 @@ void BankersAlgorithm::calculateNeed() {
 }
 
 /**
+ * @brief Checks if a road can be allocated resources
+ * @param roadIndex Index of the road to check
+ * @return true if resources can be allocated, false otherwise
+ */
+bool BankersAlgorithm::canAllocate(int roadIndex) const {
+    return canAllocate(roadIndex, available);
+}
+
+/**
  * @brief Checks if a road can be allocated resources using work vector
  * @param roadIndex Index of the road to check
  * @param work Current work vector (available + released resources)
