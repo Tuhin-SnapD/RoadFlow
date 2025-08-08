@@ -4,6 +4,9 @@ project(RoadConstruction VERSION 1.0.0 LANGUAGES CXX)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+# Export compile commands for tooling (e.g., cppcheck, clang-tidy)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
