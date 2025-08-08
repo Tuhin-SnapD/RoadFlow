@@ -136,7 +136,11 @@ std::string Logger::getTimestamp() const {
     
     std::stringstream ss;
     std::tm tm{};
+#if defined(_WIN32)
     localtime_s(&tm, &time_t);
+#else
+    localtime_r(&time_t, &tm);
+#endif
     ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
     ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
     return ss.str();
