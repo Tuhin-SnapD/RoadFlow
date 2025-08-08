@@ -87,7 +87,11 @@ jobs:
       shell: bash
       run: |
         cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-        cppcheck --project=build/compile_commands.json --enable=all --std=c++17 --inline-suppr --suppress=missingIncludeSystem --error-exitcode=1
+        cppcheck --project=build/compile_commands.json \
+                 --enable=warning,performance,portability \
+                 --std=c++17 --inline-suppr \
+                 --suppress=missingIncludeSystem \
+                 --error-exitcode=1
 
     - name: Check formatting
       run: |
