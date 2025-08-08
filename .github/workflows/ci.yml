@@ -158,7 +158,7 @@ jobs:
         tar -czf road-construction-v1.0.0.tar.gz release/
 
     - name: Upload release artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: road-construction-release
         path: road-construction-v1.0.0.tar.gz 
