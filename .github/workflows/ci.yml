@@ -52,7 +52,7 @@ jobs:
     - name: Build project
       shell: bash
       run: |
-        cmake --build build --config Release -- -j 2
+        cmake --build build --config Release --parallel 2
 
     - name: Run tests
       shell: bash
